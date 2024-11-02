@@ -1,5 +1,6 @@
 import pygame
 import random
+import math
 from game.constants import *
 
 class Collectible(pygame.sprite.Sprite):
@@ -15,7 +16,7 @@ class Collectible(pygame.sprite.Sprite):
         self.rect.y = random.randint(0, SCREEN_HEIGHT - self.rect.height)
         
         # Random movement
-        self.direction = random.uniform(0, 2 * 3.14159)
+        self.direction = random.uniform(0, 2 * math.pi)
         self.speed = COLLECTIBLE_SPEED
         self.velocity_x = math.cos(self.direction) * self.speed
         self.velocity_y = math.sin(self.direction) * self.speed

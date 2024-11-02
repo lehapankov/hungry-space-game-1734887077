@@ -7,28 +7,49 @@ from game.constants import *
 
 class Game:
     def __init__(self):
-        pygame.init()
-        pygame.mixer.init()
-        
-        self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-        pygame.display.set_caption("Hungry Space")
-        
-        # Load sounds
-        self.collect_sound = pygame.mixer.Sound('assets/sounds/collect.wav')
-        self.gameover_sound = pygame.mixer.Sound('assets/sounds/gameover.wav')
-        
-        # Create game objects
-        self.spaceship = Spaceship()
-        self.collectibles = pygame.sprite.Group()
-        self.particle_system = ParticleSystem()
-        
-        # Game state
-        self.score = 0
-        self.font = pygame.font.Font(None, 36)
-        self.clock = pygame.time.Clock()
-        
-        # Spawn initial collectibles
-        self.spawn_collectibles(5)
+        print("Initializing game...")
+        try:
+            pygame.init()
+            print("Pygame initialized successfully")
+            
+            pygame.mixer.init()
+            print("Pygame mixer initialized successfully")
+            
+            self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+            pygame.display.set_caption("Hungry Space")
+            print("Display window created successfully")
+            
+            # Load sounds with error handling
+            try:
+                self.collect_sound = pygame.mixer.Sound('assets/sounds/collect.wav')
+                self.gameover_sound = pygame.mixer.Sound('assets/sounds/gameover.wav')
+                print("Sound files loaded successfully")
+            except Exception as e:
+                print(f"Warning: Could not load sound files: {e}")
+                # Create dummy sound object that does nothing when played
+                class DummySound:
+                    def play(self): pass
+                self.collect_sound = self.gameover_sound = DummySound()
+            
+            # Create game objects
+            self.spaceship = Spaceship()
+            self.collectibles = pygame.sprite.Group()
+            self.particle_system = ParticleSystem()
+            print("Game objects created successfully")
+            
+            # Game state
+            self.score = 0
+            self.font = pygame.font.Font(None, 36)
+            self.clock = pygame.time.Clock()
+            
+            # Spawn initial collectibles
+            self.spawn_collectibles(5)
+            print("Initial setup complete")
+            
+        except Exception as e:
+            print(f"Fatal error during game initialization: {e}")
+            pygame.quit()
+            sys.exit(1)
         
     def spawn_collectibles(self, count):
         for _ in range(count):
@@ -55,20 +76,26 @@ class Game:
             self.spawn_collectibles(1)  # Spawn new collectible
             
     def draw(self):
-        self.screen.fill(BACKGROUND_COLOR)
-        
-        # Draw game objects
-        self.collectibles.draw(self.screen)
-        self.spaceship.draw(self.screen)
-        self.particle_system.draw(self.screen)
-        
-        # Draw score
-        score_text = self.font.render(f'Score: {self.score}', True, WHITE)
-        self.screen.blit(score_text, (10, 10))
-        
-        pygame.display.flip()
+        try:
+            self.screen.fill(BACKGROUND_COLOR)
+            print(f"Screen cleared with background color: {BACKGROUND_COLOR}")
+            
+            # Draw game objects
+            self.collectibles.draw(self.screen)
+            self.spaceship.draw(self.screen)
+            self.particle_system.draw(self.screen)
+            
+            # Draw score
+            score_text = self.font.render(f'Score: {self.score}', True, WHITE)
+            self.screen.blit(score_text, (10, 10))
+            
+            pygame.display.flip()
+            print("Frame rendered successfully")
+        except Exception as e:
+            print(f"Error during drawing: {e}")
     
     def run(self):
+        print("Starting game loop...")
         running = True
         while running:
             running = self.handle_events()
