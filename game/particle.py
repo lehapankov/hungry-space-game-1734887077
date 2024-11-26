@@ -10,7 +10,12 @@ class Particle:
         self.velocity_y = random.uniform(-2, 2)
         self.lifetime = PARTICLE_LIFETIME
         self.color = random.choice(PARTICLE_COLORS)
-        self.size = random.randint(2, 4)
+        # Randomly choose between small and large particles
+        self.size = random.choice([PARTICLE_SIZE_SMALL, PARTICLE_SIZE_LARGE])
+        # Adjust velocity based on size - larger particles move slower
+        velocity_factor = 1.5 if self.size == PARTICLE_SIZE_SMALL else 0.8
+        self.velocity_x *= velocity_factor
+        self.velocity_y *= velocity_factor
     
     def update(self):
         self.x += self.velocity_x
@@ -25,7 +30,13 @@ class ParticleSystem:
         self.particles = []
     
     def create_particles(self, position):
-        for _ in range(10):
+        # Create a mix of small and large particles
+        # More small particles than large ones for better visual effect
+        num_small = 8
+        num_large = 4
+        total_particles = num_small + num_large
+        
+        for _ in range(total_particles):
             self.particles.append(Particle(*position))
     
     def update(self):
