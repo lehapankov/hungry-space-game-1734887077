@@ -31,9 +31,9 @@ class ParticleSystem:
     
     def create_particles(self, position):
         # Create a mix of small and large particles
-        # More small particles than large ones for better visual effect
-        num_small = 8
-        num_large = 4
+        # More small particles than large ones for better visual contrast
+        num_small = 10
+        num_large = 3
         total_particles = num_small + num_large
         
         for _ in range(total_particles):
