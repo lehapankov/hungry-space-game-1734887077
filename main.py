@@ -70,7 +70,7 @@ class Game:
         # Check collisions
         collisions = pygame.sprite.spritecollide(self.spaceship, self.collectibles, True)
         for collision in collisions:
-            self.score += 10
+            self.score += collision.points
             self.collect_sound.play()
             self.particle_system.create_particles(collision.rect.center)
             self.spawn_collectibles(1)  # Spawn new collectible

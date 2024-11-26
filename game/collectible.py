@@ -6,9 +6,13 @@ from game.constants import *
 class Collectible(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
-        # Create a simple star shape for the collectible
-        self.image = pygame.Surface((20, 20), pygame.SRCALPHA)
-        pygame.draw.circle(self.image, WHITE, (10, 10), 10)
+        # Randomly choose size with 70% small, 30% large probability
+        self.size = COLLECTIBLE_SIZE_SMALL if random.random() < 0.7 else COLLECTIBLE_SIZE_LARGE
+        self.points = POINTS_SMALL if self.size == COLLECTIBLE_SIZE_SMALL else POINTS_LARGE
+        
+        # Create surface based on size
+        self.image = pygame.Surface((self.size, self.size), pygame.SRCALPHA)
+        pygame.draw.circle(self.image, WHITE, (self.size // 2, self.size // 2), self.size // 2)
         self.rect = self.image.get_rect()
         
         # Random starting position
