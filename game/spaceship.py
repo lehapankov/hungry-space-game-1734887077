@@ -22,6 +22,14 @@ class Spaceship(pygame.sprite.Sprite):
         self.friction = 0.98
         self.max_speed = SPACESHIP_SPEED
         
+        # Key state tracking
+        self.keys_pressed = {
+            pygame.K_LEFT: False,
+            pygame.K_RIGHT: False,
+            pygame.K_UP: False,
+            pygame.K_DOWN: False
+        }
+        
         # Initialize font for size display
         self.font = pygame.font.Font(None, int(self.size * 0.5))
     
@@ -37,16 +45,23 @@ class Spaceship(pygame.sprite.Sprite):
     
     def handle_event(self, event):
         if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_LEFT:
-                self.velocity_x -= self.acceleration * self.speed_multiplier
-            elif event.key == pygame.K_RIGHT:
-                self.velocity_x += self.acceleration * self.speed_multiplier
-            elif event.key == pygame.K_UP:
-                self.velocity_y -= self.acceleration * self.speed_multiplier
-            elif event.key == pygame.K_DOWN:
-                self.velocity_y += self.acceleration * self.speed_multiplier
+            if event.key in self.keys_pressed:
+                self.keys_pressed[event.key] = True
+        elif event.type == pygame.KEYUP:
+            if event.key in self.keys_pressed:
+                self.keys_pressed[event.key] = False
     
     def update(self):
+        # Handle continuous acceleration based on key states
+        if self.keys_pressed[pygame.K_LEFT]:
+            self.velocity_x -= self.acceleration * self.speed_multiplier
+        if self.keys_pressed[pygame.K_RIGHT]:
+            self.velocity_x += self.acceleration * self.speed_multiplier
+        if self.keys_pressed[pygame.K_UP]:
+            self.velocity_y -= self.acceleration * self.speed_multiplier
+        if self.keys_pressed[pygame.K_DOWN]:
+            self.velocity_y += self.acceleration * self.speed_multiplier
+
         # Apply friction
         self.velocity_x *= self.friction
         self.velocity_y *= self.friction
