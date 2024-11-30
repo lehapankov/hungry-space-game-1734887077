@@ -112,7 +112,7 @@ class Game:
             # Check collisions
             collisions = pygame.sprite.spritecollide(self.spaceship, self.collectibles, True)
             for collision in collisions:
-                if collision.size == COLLECTIBLE_SIZE_LARGE:
+                if collision.size > self.spaceship.size:
                     self.game_over = True
                     self.gameover_sound.play()
                     self.particle_system.create_particles(collision.rect.center)

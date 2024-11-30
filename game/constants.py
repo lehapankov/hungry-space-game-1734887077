@@ -35,3 +35,6 @@ POINTS_LARGE = 15
 # Collectible speed settings
 COLLECTIBLE_SPEED_MIN = 1.0  # Minimum speed (Vmin)
 COLLECTIBLE_SPEED_MAX = 3.0  # Maximum speed (Vmax)
+# Dynamic size system
+COLLECTIBLE_SIZE_MIN = 10.0
+COLLECTIBLE_SIZE_MAX = 100.0

@@ -6,13 +6,15 @@ from game.constants import *
 class Collectible(pygame.sprite.Sprite):
     def __init__(self, position=None, velocity=None):
         super().__init__()
-        # Randomly choose size with 70% small, 30% large probability
-        self.size = COLLECTIBLE_SIZE_SMALL if random.random() < 0.7 else COLLECTIBLE_SIZE_LARGE
-        self.points = POINTS_SMALL if self.size == COLLECTIBLE_SIZE_SMALL else POINTS_LARGE
+        # Generate random size between min and max
+        self.size = random.uniform(COLLECTIBLE_SIZE_MIN, COLLECTIBLE_SIZE_MAX)
+        # Calculate points based on size
+        self.points = int(5 + (self.size - COLLECTIBLE_SIZE_MIN) * 0.3)
         
         # Create surface based on size
-        self.image = pygame.Surface((self.size, self.size), pygame.SRCALPHA)
-        pygame.draw.circle(self.image, WHITE, (self.size // 2, self.size // 2), self.size // 2)
+        size_int = int(self.size)
+        self.image = pygame.Surface((size_int, size_int), pygame.SRCALPHA)
+        pygame.draw.circle(self.image, WHITE, (size_int // 2, size_int // 2), size_int // 2)
         self.rect = self.image.get_rect()
         
         if position:
