@@ -145,27 +145,12 @@ class Game:
                 text_rect = game_over_text.get_rect(center=(SCREEN_WIDTH/2, SCREEN_HEIGHT/2))
                 self.screen.blit(game_over_text, text_rect)
                 
-                # Size distribution statistics
+                # Display collected sizes as a comma-separated list
                 if self.collected_sizes:
-                    min_size = min(self.collected_sizes)
-                    max_size = max(self.collected_sizes)
-                    avg_size = sum(self.collected_sizes) / len(self.collected_sizes)
-                    
-                    # Count asteroids in different size ranges
-                    small = sum(1 for s in self.collected_sizes if 10 <= s <= 30)
-                    medium = sum(1 for s in self.collected_sizes if 31 <= s <= 60)
-                    large = sum(1 for s in self.collected_sizes if 61 <= s <= 100)
-                    
-                    # Render statistics
-                    stats_lines = [
-                        f"Size Stats - Min: {min_size:.1f}, Max: {max_size:.1f}, Avg: {avg_size:.1f}",
-                        f"Distribution - Small(10-30): {small}, Medium(31-60): {medium}, Large(61-100): {large}"
-                    ]
-                    
-                    for i, line in enumerate(stats_lines):
-                        stats_text = self.font.render(line, True, WHITE)
-                        stats_rect = stats_text.get_rect(center=(SCREEN_WIDTH/2, SCREEN_HEIGHT/2 + 50 + i * 30))
-                        self.screen.blit(stats_text, stats_rect)
+                    sizes_text = f"Collected sizes: {', '.join(str(int(size)) for size in self.collected_sizes)}"
+                    sizes_text = self.font.render(sizes_text, True, WHITE)
+                    sizes_rect = sizes_text.get_rect(center=(SCREEN_WIDTH/2, SCREEN_HEIGHT/2 + 50))
+                    self.screen.blit(sizes_text, sizes_rect)
             
             pygame.display.flip()
         except Exception as e:

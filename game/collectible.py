@@ -61,7 +61,7 @@ class Collectible(pygame.sprite.Sprite):
         # Draw the collectible
         screen.blit(self.image, self.rect)
         
-        # Render size text with one decimal place
-        size_text = self.font.render(f"{self.size:.1f}", True, BLACK)
+        # Render size text as whole number
+        size_text = self.font.render(str(int(self.size)), True, BLACK)
         text_rect = size_text.get_rect(center=self.rect.center)
         screen.blit(size_text, text_rect)
