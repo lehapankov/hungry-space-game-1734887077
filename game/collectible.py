@@ -14,12 +14,16 @@ class Collectible(pygame.sprite.Sprite):
         # Debug print to verify size distribution
         print(f"Created collectible with size: {self.size}")
         
-        # Calculate points based on size
-        self.points = int(5 + (self.size - COLLECTIBLE_SIZE_MIN) * 0.3)
+        # Calculate points based on size using a more dynamic scale
+        size_ratio = (self.size - COLLECTIBLE_SIZE_MIN) / (COLLECTIBLE_SIZE_MAX - COLLECTIBLE_SIZE_MIN)
+        self.points = int(5 + size_ratio * 20)  # Points range from 5 to 25
         
         # Initialize font for size display - ensure minimum readable size
-        font_size = max(12, int(self.size * 0.5))
+        font_size = max(12, int(self.size * 0.4))
         self.font = pygame.font.Font(None, font_size)
+        
+        # Adjust speed based on size - larger objects move slower
+        self.speed_multiplier = 1.0 - (size_ratio * 0.6)  # Speed multiplier ranges from 0.4 to 1.0
         
         # Create surface with double the size for proper circle diameter
         size_int = int(self.size * 2)  # Double the size for proper circle diameter
@@ -43,11 +47,12 @@ class Collectible(pygame.sprite.Sprite):
         if velocity:
             self.velocity_x, self.velocity_y = velocity
         else:
-            # Random movement with random speed
+            # Random movement with size-dependent speed
             self.direction = random.uniform(0, 2 * math.pi)
-            self.speed = random.uniform(COLLECTIBLE_SPEED_MIN, COLLECTIBLE_SPEED_MAX)
-            self.velocity_x = math.cos(self.direction) * self.speed
-            self.velocity_y = math.sin(self.direction) * self.speed
+            base_speed = random.uniform(COLLECTIBLE_SPEED_MIN, COLLECTIBLE_SPEED_MAX)
+            adjusted_speed = base_speed * self.speed_multiplier
+            self.velocity_x = math.cos(self.direction) * adjusted_speed
+            self.velocity_y = math.sin(self.direction) * adjusted_speed
     
     def update(self):
         # Move collectible

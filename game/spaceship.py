@@ -79,12 +79,20 @@ class Spaceship(pygame.sprite.Sprite):
         self.rect.clamp_ip(pygame.display.get_surface().get_rect())
     
     def adjust_size(self, collected_size):
-        # Grow slightly when collecting smaller items
+        # Dynamic growth based on size difference
         if collected_size < self.size:
-            growth = collected_size * 0.1  # 10% of collected item's size
-            self.size = min(100.0, self.size + growth)  # Cap at exactly 100.0 pixels
-            # Update speed multiplier based on new size
-            self.speed_multiplier = SPACESHIP_BASE_SIZE / self.size
+            # Calculate growth factor based on relative sizes
+            size_ratio = collected_size / self.size
+            growth = collected_size * (0.15 - (size_ratio * 0.05))  # More growth from smaller items
+            
+            # Apply growth with smooth transition
+            old_size = self.size
+            self.size = min(100.0, self.size + growth)
+            
+            # Gradually decrease speed as size increases
+            size_factor = self.size / SPACESHIP_BASE_SIZE
+            self.speed_multiplier = 1.0 / (size_factor ** 0.7)  # Non-linear speed reduction
+            
             # Update surface with new size
             self.update_surface()
             # Update rect position to maintain center

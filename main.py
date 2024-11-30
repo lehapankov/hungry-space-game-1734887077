@@ -11,6 +11,10 @@ class Game:
     def __init__(self):
         print("Initializing game...")
         try:
+            # Loading state
+            self.loading = True
+            self.loaded = False
+            
             pygame.init()
             print("Pygame initialized successfully")
             
@@ -83,6 +87,14 @@ class Game:
             direction = random.uniform(-math.pi / 4, math.pi / 4)  # Rightward
         
         speed = random.uniform(COLLECTIBLE_SPEED_MIN, COLLECTIBLE_SPEED_MAX)
+    def preload_game_objects(self):
+        # Create initial pool of collectibles
+        self.collectibles = pygame.sprite.Group()
+        self.spawn_collectibles(5)
+        self.loaded = True
+        self.loading = False
+        print("Game objects preloaded successfully")
+
         velocity = (math.cos(direction) * speed, math.sin(direction) * speed)
         
         return Collectible(game=self, position=(x, y), velocity=velocity)
