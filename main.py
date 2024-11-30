@@ -11,10 +11,7 @@ class Game:
     def __init__(self):
         print("Initializing game...")
         try:
-            # Loading state
-            self.loading = True
-            self.loaded = False
-            
+            # Initialize Pygame
             pygame.init()
             print("Pygame initialized successfully")
             
@@ -25,20 +22,25 @@ class Game:
             pygame.display.set_caption("Hungry Space")
             print("Display window created successfully")
             
-            # Game state initialization
+            # Initialize game objects
+            self.loading = True
+            self.loaded = False
             
-            # Load sounds with error handling
+            # Load sounds
             try:
                 self.collect_sound = pygame.mixer.Sound('assets/sounds/collect.wav')
                 self.gameover_sound = pygame.mixer.Sound('assets/sounds/gameover.wav')
                 print("Sound files loaded successfully")
             except Exception as e:
                 print(f"Warning: Could not load sound files: {e}")
-                # Create dummy sound object that does nothing when played
                 class DummySound:
                     def play(self): pass
                 self.collect_sound = self.gameover_sound = DummySound()
             
+            # Initialize game objects first
+            self.preload_game_objects()
+            
+            # Then reset game state
             self.reset_game()
             print("Initial setup complete")
             
@@ -47,6 +49,14 @@ class Game:
             pygame.quit()
             sys.exit(1)
     
+    def preload_game_objects(self):
+        # Create initial pool of collectibles
+        self.collectibles = pygame.sprite.Group()
+        self.spawn_collectibles(5)
+        self.loaded = True
+        self.loading = False
+        print("Game objects preloaded successfully")
+
     def reset_game(self):
         # Game state initialization
         self.score = 0
@@ -58,11 +68,13 @@ class Game:
         # Create game objects after display initialization
         self.spaceship = Spaceship()
         self.particle_system = ParticleSystem()
-        self.collectibles = pygame.sprite.Group()  # Ensure proper initialization
+        if not hasattr(self, 'collectibles'):
+            self.collectibles = pygame.sprite.Group()
         print("Game objects created successfully")
         
-        # Spawn initial collectibles
-        self.spawn_collectibles(5)
+        # Spawn initial collectibles if needed
+        if len(self.collectibles) == 0:
+            self.spawn_collectibles(5)
     
     def spawn_collectible_at_edge(self):
         # Choose a random edge (0: top, 1: right, 2: bottom, 3: left)
@@ -86,14 +98,6 @@ class Game:
             direction = random.uniform(-math.pi / 4, math.pi / 4)  # Rightward
         
         speed = random.uniform(COLLECTIBLE_SPEED_MIN, COLLECTIBLE_SPEED_MAX)
-    def preload_game_objects(self):
-        # Create initial pool of collectibles
-        self.collectibles = pygame.sprite.Group()
-        self.spawn_collectibles(5)
-        self.loaded = True
-        self.loading = False
-        print("Game objects preloaded successfully")
-
         velocity = (math.cos(direction) * speed, math.sin(direction) * speed)
         
         return Collectible(game=self, position=(x, y), velocity=velocity)
