@@ -30,6 +30,7 @@ class Collectible(pygame.sprite.Sprite):
         center = size_int // 2
         print(f"Drawing circle at center ({center}, {center}) with radius {self.size // 2}")
         pygame.draw.circle(self.image, WHITE, (center, center), self.size // 2)
+        self.mask = pygame.mask.from_surface(self.image)
         self.rect = self.image.get_rect()
         
         if position:

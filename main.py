@@ -112,7 +112,8 @@ class Game:
                 self.spawn_collectibles(1)
             
             # Check collisions
-            collisions = pygame.sprite.spritecollide(self.spaceship, self.collectibles, True)
+            collisions = pygame.sprite.spritecollide(self.spaceship, self.collectibles, True, 
+                                          pygame.sprite.collide_mask)
             for collision in collisions:
                 if collision.size > self.spaceship.size:
                     self.game_over = True
