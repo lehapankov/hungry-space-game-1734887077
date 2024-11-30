@@ -53,8 +53,6 @@ class Collectible(pygame.sprite.Sprite):
         # Kill if off screen
         if (self.rect.right < 0 or self.rect.left > SCREEN_WIDTH or 
             self.rect.bottom < 0 or self.rect.top > SCREEN_HEIGHT):
-            if self.game:
-                self.game.collected_sizes.append(self.size)
             self.kill()
             
     def draw(self, screen):

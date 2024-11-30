@@ -21,8 +21,7 @@ class Game:
             pygame.display.set_caption("Hungry Space")
             print("Display window created successfully")
             
-            # Initialize list to track asteroid sizes
-            self.collected_sizes = []
+            # Game state initialization
             
             # Load sounds with error handling
             try:
@@ -134,9 +133,15 @@ class Game:
             self.spaceship.draw(self.screen)
             self.particle_system.draw(self.screen)
             
-            # Draw score
+            # Draw score and current sizes
             score_text = self.font.render(f'Score: {self.score}', True, WHITE)
             self.screen.blit(score_text, (10, 10))
+            
+            # Display current asteroid sizes
+            current_sizes = [int(c.size) for c in self.collectibles]
+            sizes_text = f"Current sizes: {', '.join(map(str, current_sizes))}"
+            sizes_text = self.font.render(sizes_text, True, WHITE)
+            self.screen.blit(sizes_text, (10, 50))
             
             # Draw game over message
             if self.game_over:
@@ -145,12 +150,7 @@ class Game:
                 text_rect = game_over_text.get_rect(center=(SCREEN_WIDTH/2, SCREEN_HEIGHT/2))
                 self.screen.blit(game_over_text, text_rect)
                 
-                # Display collected sizes as a comma-separated list
-                if self.collected_sizes:
-                    sizes_text = f"Collected sizes: {', '.join(str(int(size)) for size in self.collected_sizes)}"
-                    sizes_text = self.font.render(sizes_text, True, WHITE)
-                    sizes_rect = sizes_text.get_rect(center=(SCREEN_WIDTH/2, SCREEN_HEIGHT/2 + 50))
-                    self.screen.blit(sizes_text, sizes_rect)
+                # Game over screen
             
             pygame.display.flip()
         except Exception as e:
