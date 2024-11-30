@@ -8,6 +8,10 @@ class Spaceship(pygame.sprite.Sprite):
         self.update_surface()
         self.rect = self.image.get_rect()
         
+        # Center the spaceship at start
+        screen = pygame.display.get_surface()
+        self.rect.center = (screen.get_width() // 2, screen.get_height() // 2)
+        
         # Initialize movement variables
         self.velocity_x = 0
         self.velocity_y = 0
