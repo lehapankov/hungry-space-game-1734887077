@@ -54,6 +54,7 @@ class Game:
         # Game state
         self.score = 0
         self.game_over = False
+        self.won = False
         self.font = pygame.font.Font(None, 36)
         self.clock = pygame.time.Clock()
         
@@ -125,6 +126,10 @@ class Game:
                     self.particle_system.create_particles(collision.rect.center)
                     # Update spaceship size based on collected item
                     self.spaceship.adjust_size(collision.size)
+                    # Check for win condition
+                    if self.spaceship.size >= 100:
+                        self.won = True
+                        self.game_over = True
     
     def draw(self):
         try:
@@ -142,12 +147,17 @@ class Game:
             
             # Draw game over message
             if self.game_over:
-                # Game over message
-                game_over_text = self.font.render('Game Over! Press SPACE to restart', True, WHITE)
-                text_rect = game_over_text.get_rect(center=(SCREEN_WIDTH/2, SCREEN_HEIGHT/2))
-                self.screen.blit(game_over_text, text_rect)
-                
-                # Game over screen
+                if self.won:
+                    win_text = self.font.render('Congratulations! You reached maximum size!', True, WHITE)
+                    win_text2 = self.font.render('Press SPACE to play again', True, WHITE)
+                    text_rect = win_text.get_rect(center=(SCREEN_WIDTH/2, SCREEN_HEIGHT/2 - 20))
+                    text_rect2 = win_text2.get_rect(center=(SCREEN_WIDTH/2, SCREEN_HEIGHT/2 + 20))
+                    self.screen.blit(win_text, text_rect)
+                    self.screen.blit(win_text2, text_rect2)
+                else:
+                    game_over_text = self.font.render('Game Over! Press SPACE to restart', True, WHITE)
+                    text_rect = game_over_text.get_rect(center=(SCREEN_WIDTH/2, SCREEN_HEIGHT/2))
+                    self.screen.blit(game_over_text, text_rect)
             
             pygame.display.flip()
         except Exception as e:

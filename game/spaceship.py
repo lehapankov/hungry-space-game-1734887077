@@ -82,7 +82,7 @@ class Spaceship(pygame.sprite.Sprite):
         # Grow slightly when collecting smaller items
         if collected_size < self.size:
             growth = collected_size * 0.1  # 10% of collected item's size
-            self.size = min(100, self.size + growth)  # Cap at 100 pixels
+            self.size = min(100.0, self.size + growth)  # Cap at exactly 100.0 pixels
             # Update speed multiplier based on new size
             self.speed_multiplier = SPACESHIP_BASE_SIZE / self.size
             # Update surface with new size
