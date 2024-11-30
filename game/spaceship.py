@@ -7,6 +7,14 @@ class Spaceship(pygame.sprite.Sprite):
         self.size = 40
         self.update_surface()
         self.rect = self.image.get_rect()
+        
+        # Initialize movement variables
+        self.velocity_x = 0
+        self.velocity_y = 0
+        self.speed_multiplier = SPACESHIP_BASE_SIZE / self.size
+        
+        # Initialize font for size display
+        self.font = pygame.font.Font(None, int(self.size * 0.5))
     
     def update_surface(self):
         # Create a simple triangle shape for the spaceship
@@ -17,33 +25,17 @@ class Spaceship(pygame.sprite.Sprite):
             (0, self.size),
             (self.size, self.size)
         ])
-        
-        # Initialize font for size display
-        self.font = pygame.font.Font(None, int(self.size * 0.5))
-        
-        # Starting position
-        self.rect.centerx = SCREEN_WIDTH // 2
-        self.rect.centery = SCREEN_HEIGHT // 2
-        
-        # Movement
-        self.velocity_x = 0
-        self.velocity_y = 0
-        
-        # Adjust speed based on size
-        self.speed_multiplier = SPACESHIP_BASE_SIZE / self.size
     
     def handle_event(self, event):
         if event.type == pygame.KEYDOWN:
-            adjusted_speed = SPACESHIP_SPEED * self.speed_multiplier
             if event.key == pygame.K_LEFT:
-                self.velocity_x = -adjusted_speed
+                self.velocity_x = -SPACESHIP_SPEED * self.speed_multiplier
             elif event.key == pygame.K_RIGHT:
-                self.velocity_x = adjusted_speed
+                self.velocity_x = SPACESHIP_SPEED * self.speed_multiplier
             elif event.key == pygame.K_UP:
-                self.velocity_y = -adjusted_speed
+                self.velocity_y = -SPACESHIP_SPEED * self.speed_multiplier
             elif event.key == pygame.K_DOWN:
-                self.velocity_y = adjusted_speed
-        
+                self.velocity_y = SPACESHIP_SPEED * self.speed_multiplier
         elif event.type == pygame.KEYUP:
             if event.key in (pygame.K_LEFT, pygame.K_RIGHT):
                 self.velocity_x = 0
@@ -55,18 +47,9 @@ class Spaceship(pygame.sprite.Sprite):
         self.rect.x += self.velocity_x
         self.rect.y += self.velocity_y
         
-        # Keep spaceship in bounds
-        self.rect.clamp_ip(pygame.Rect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT))
+        # Keep spaceship within screen bounds
+        self.rect.clamp_ip(pygame.display.get_surface().get_rect())
     
-    def draw(self, screen):
-        # Draw the spaceship
-        screen.blit(self.image, self.rect)
-        
-        # Render size text
-        size_text = self.font.render(str(int(self.size)), True, BLACK)
-        text_rect = size_text.get_rect(center=(
-            self.rect.centerx,
-            self.rect.centery + self.size // 4
     def adjust_size(self, collected_size):
         # Grow slightly when collecting smaller items
         if collected_size < self.size:
@@ -80,5 +63,15 @@ class Spaceship(pygame.sprite.Sprite):
             old_center = self.rect.center
             self.rect = self.image.get_rect()
             self.rect.center = old_center
+    
+    def draw(self, screen):
+        # Draw the spaceship
+        screen.blit(self.image, self.rect)
+        
+        # Draw size text
+        size_text = self.font.render(str(int(self.size)), True, WHITE)
+        text_rect = size_text.get_rect(center=(
+            self.rect.centerx,
+            self.rect.centery + self.size // 4
         ))
         screen.blit(size_text, text_rect)
