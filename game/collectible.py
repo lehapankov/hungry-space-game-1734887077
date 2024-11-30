@@ -21,12 +21,12 @@ class Collectible(pygame.sprite.Sprite):
         font_size = max(12, int(self.size * 0.5))
         self.font = pygame.font.Font(None, font_size)
         
-        # Create surface based on size - ensure we don't lose precision
-        size_int = max(10, round(self.size))  # Ensure minimum visible size
+        # Create surface based on size using ceiling to ensure complete circle visibility
+        size_int = math.ceil(self.size)
         self.image = pygame.Surface((size_int, size_int), pygame.SRCALPHA)
-        # Draw circle with exact center and radius
-        center = size_int // 2
-        pygame.draw.circle(self.image, WHITE, (center, center), center)
+        # Draw circle with exact center and radius using float size
+        center = size_int / 2
+        pygame.draw.circle(self.image, WHITE, (center, center), self.size / 2)
         self.rect = self.image.get_rect()
         
         if position:
@@ -61,7 +61,7 @@ class Collectible(pygame.sprite.Sprite):
         # Draw the collectible
         screen.blit(self.image, self.rect)
         
-        # Render size text
-        size_text = self.font.render(str(int(self.size)), True, BLACK)
+        # Render size text with one decimal place
+        size_text = self.font.render(f"{self.size:.1f}", True, BLACK)
         text_rect = size_text.get_rect(center=self.rect.center)
         screen.blit(size_text, text_rect)
