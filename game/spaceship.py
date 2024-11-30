@@ -69,7 +69,7 @@ class Spaceship(pygame.sprite.Sprite):
         screen.blit(self.image, self.rect)
         
         # Draw size text
-        size_text = self.font.render(str(int(self.size)), True, WHITE)
+        size_text = self.font.render(str(int(self.size)), True, BLACK)
         text_rect = size_text.get_rect(center=(
             self.rect.centerx,
             self.rect.centery + self.size // 4
