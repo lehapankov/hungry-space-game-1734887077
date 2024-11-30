@@ -2,9 +2,9 @@ import pygame
 from game.constants import *
 
 class Spaceship(pygame.sprite.Sprite):
-    def __init__(self, size=SPACESHIP_BASE_SIZE):
+    def __init__(self):
         super().__init__()
-        self.size = max(SPACESHIP_MIN_SIZE, min(size, SPACESHIP_MAX_SIZE))
+        self.size = 40
         # Create a simple triangle shape for the spaceship
         self.image = pygame.Surface((self.size, self.size), pygame.SRCALPHA)
         half_size = self.size // 2

@@ -43,8 +43,8 @@ class Game:
     
     def reset_game(self):
         # Create game objects with random size variation
-        initial_size = random.randint(SPACESHIP_MIN_SIZE, SPACESHIP_MAX_SIZE)
-        self.spaceship = Spaceship(size=initial_size)
+        initial_size = 40
+        self.spaceship = Spaceship()
         self.collectibles = pygame.sprite.Group()
         self.particle_system = ParticleSystem()
         print("Game objects created successfully")
