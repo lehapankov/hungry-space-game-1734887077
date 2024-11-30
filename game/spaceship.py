@@ -17,6 +17,11 @@ class Spaceship(pygame.sprite.Sprite):
         self.velocity_y = 0
         self.speed_multiplier = SPACESHIP_BASE_SIZE / self.size
         
+        # Physics variables for inertia
+        self.acceleration = 0.5
+        self.friction = 0.98
+        self.max_speed = SPACESHIP_SPEED
+        
         # Initialize font for size display
         self.font = pygame.font.Font(None, int(self.size * 0.5))
     
@@ -33,20 +38,24 @@ class Spaceship(pygame.sprite.Sprite):
     def handle_event(self, event):
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_LEFT:
-                self.velocity_x = -SPACESHIP_SPEED * self.speed_multiplier
+                self.velocity_x -= self.acceleration * self.speed_multiplier
             elif event.key == pygame.K_RIGHT:
-                self.velocity_x = SPACESHIP_SPEED * self.speed_multiplier
+                self.velocity_x += self.acceleration * self.speed_multiplier
             elif event.key == pygame.K_UP:
-                self.velocity_y = -SPACESHIP_SPEED * self.speed_multiplier
+                self.velocity_y -= self.acceleration * self.speed_multiplier
             elif event.key == pygame.K_DOWN:
-                self.velocity_y = SPACESHIP_SPEED * self.speed_multiplier
-        elif event.type == pygame.KEYUP:
-            if event.key in (pygame.K_LEFT, pygame.K_RIGHT):
-                self.velocity_x = 0
-            elif event.key in (pygame.K_UP, pygame.K_DOWN):
-                self.velocity_y = 0
+                self.velocity_y += self.acceleration * self.speed_multiplier
     
     def update(self):
+        # Apply friction
+        self.velocity_x *= self.friction
+        self.velocity_y *= self.friction
+        
+        # Clamp velocities to max_speed
+        max_vel = self.max_speed * self.speed_multiplier
+        self.velocity_x = max(min(self.velocity_x, max_vel), -max_vel)
+        self.velocity_y = max(min(self.velocity_y, max_vel), -max_vel)
+        
         # Update position
         self.rect.x += self.velocity_x
         self.rect.y += self.velocity_y
