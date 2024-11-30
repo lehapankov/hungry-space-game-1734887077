@@ -4,8 +4,9 @@ import math
 from game.constants import *
 
 class Collectible(pygame.sprite.Sprite):
-    def __init__(self, position=None, velocity=None):
+    def __init__(self, game=None, position=None, velocity=None):
         super().__init__()
+        self.game = game
         # Generate random size between min and max using a more controlled distribution
         # Use round to prevent floating point precision issues
         self.size = round(random.uniform(COLLECTIBLE_SIZE_MIN, COLLECTIBLE_SIZE_MAX), 1)
@@ -52,6 +53,8 @@ class Collectible(pygame.sprite.Sprite):
         # Kill if off screen
         if (self.rect.right < 0 or self.rect.left > SCREEN_WIDTH or 
             self.rect.bottom < 0 or self.rect.top > SCREEN_HEIGHT):
+            if self.game:
+                self.game.collected_sizes.append(self.size)
             self.kill()
             
     def draw(self, screen):

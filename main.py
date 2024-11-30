@@ -21,6 +21,9 @@ class Game:
             pygame.display.set_caption("Hungry Space")
             print("Display window created successfully")
             
+            # Initialize list to track asteroid sizes
+            self.collected_sizes = []
+            
             # Load sounds with error handling
             try:
                 self.collect_sound = pygame.mixer.Sound('assets/sounds/collect.wav')
@@ -82,7 +85,7 @@ class Game:
         speed = random.uniform(COLLECTIBLE_SPEED_MIN, COLLECTIBLE_SPEED_MAX)
         velocity = (math.cos(direction) * speed, math.sin(direction) * speed)
         
-        return Collectible(position=(x, y), velocity=velocity)
+        return Collectible(game=self, position=(x, y), velocity=velocity)
     
     def spawn_collectibles(self, count):
         for _ in range(count):
@@ -137,9 +140,32 @@ class Game:
             
             # Draw game over message
             if self.game_over:
+                # Game over message
                 game_over_text = self.font.render('Game Over! Press SPACE to restart', True, WHITE)
                 text_rect = game_over_text.get_rect(center=(SCREEN_WIDTH/2, SCREEN_HEIGHT/2))
                 self.screen.blit(game_over_text, text_rect)
+                
+                # Size distribution statistics
+                if self.collected_sizes:
+                    min_size = min(self.collected_sizes)
+                    max_size = max(self.collected_sizes)
+                    avg_size = sum(self.collected_sizes) / len(self.collected_sizes)
+                    
+                    # Count asteroids in different size ranges
+                    small = sum(1 for s in self.collected_sizes if 10 <= s <= 30)
+                    medium = sum(1 for s in self.collected_sizes if 31 <= s <= 60)
+                    large = sum(1 for s in self.collected_sizes if 61 <= s <= 100)
+                    
+                    # Render statistics
+                    stats_lines = [
+                        f"Size Stats - Min: {min_size:.1f}, Max: {max_size:.1f}, Avg: {avg_size:.1f}",
+                        f"Distribution - Small(10-30): {small}, Medium(31-60): {medium}, Large(61-100): {large}"
+                    ]
+                    
+                    for i, line in enumerate(stats_lines):
+                        stats_text = self.font.render(line, True, WHITE)
+                        stats_rect = stats_text.get_rect(center=(SCREEN_WIDTH/2, SCREEN_HEIGHT/2 + 50 + i * 30))
+                        self.screen.blit(stats_text, stats_rect)
             
             pygame.display.flip()
         except Exception as e:
