@@ -6,18 +6,26 @@ from game.constants import *
 class Collectible(pygame.sprite.Sprite):
     def __init__(self, position=None, velocity=None):
         super().__init__()
-        # Generate random size between min and max
-        self.size = random.uniform(COLLECTIBLE_SIZE_MIN, COLLECTIBLE_SIZE_MAX)
+        # Generate random size between min and max using a more controlled distribution
+        # Use round to prevent floating point precision issues
+        self.size = round(random.uniform(COLLECTIBLE_SIZE_MIN, COLLECTIBLE_SIZE_MAX), 1)
+        
+        # Debug print to verify size distribution
+        print(f"Created collectible with size: {self.size}")
+        
         # Calculate points based on size
         self.points = int(5 + (self.size - COLLECTIBLE_SIZE_MIN) * 0.3)
         
-        # Initialize font for size display
-        self.font = pygame.font.Font(None, int(self.size * 0.5))
+        # Initialize font for size display - ensure minimum readable size
+        font_size = max(12, int(self.size * 0.5))
+        self.font = pygame.font.Font(None, font_size)
         
-        # Create surface based on size
-        size_int = int(self.size)
+        # Create surface based on size - ensure we don't lose precision
+        size_int = max(10, round(self.size))  # Ensure minimum visible size
         self.image = pygame.Surface((size_int, size_int), pygame.SRCALPHA)
-        pygame.draw.circle(self.image, WHITE, (size_int // 2, size_int // 2), size_int // 2)
+        # Draw circle with exact center and radius
+        center = size_int // 2
+        pygame.draw.circle(self.image, WHITE, (center, center), center)
         self.rect = self.image.get_rect()
         
         if position:
