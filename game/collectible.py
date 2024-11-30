@@ -21,16 +21,15 @@ class Collectible(pygame.sprite.Sprite):
         font_size = max(12, int(self.size * 0.5))
         self.font = pygame.font.Font(None, font_size)
         
-        # Create surface based on size using ceiling to ensure complete circle visibility
-        size_int = math.ceil(self.size)
+        # Create surface with double the size for proper circle diameter
+        size_int = int(self.size * 2)  # Double the size for proper circle diameter
         # Debug prints for surface creation
         print(f"Creating surface with size: {size_int}x{size_int}")
         self.image = pygame.Surface((size_int, size_int), pygame.SRCALPHA)
-        # Draw circle with exact center and radius using float size
-        center = size_int / 2
-        radius = max(1, self.size / 2)  # Ensure minimum radius of 1 pixel
-        print(f"Drawing circle at center ({center}, {center}) with radius {radius}")
-        pygame.draw.circle(self.image, WHITE, (center, center), radius)
+        # Draw circle with exact center and radius
+        center = size_int // 2
+        print(f"Drawing circle at center ({center}, {center}) with radius {self.size // 2}")
+        pygame.draw.circle(self.image, WHITE, (center, center), self.size // 2)
         self.rect = self.image.get_rect()
         
         if position:
