@@ -23,10 +23,14 @@ class Collectible(pygame.sprite.Sprite):
         
         # Create surface based on size using ceiling to ensure complete circle visibility
         size_int = math.ceil(self.size)
+        # Debug prints for surface creation
+        print(f"Creating surface with size: {size_int}x{size_int}")
         self.image = pygame.Surface((size_int, size_int), pygame.SRCALPHA)
         # Draw circle with exact center and radius using float size
         center = size_int / 2
-        pygame.draw.circle(self.image, WHITE, (center, center), self.size / 2)
+        radius = max(1, self.size / 2)  # Ensure minimum radius of 1 pixel
+        print(f"Drawing circle at center ({center}, {center}) with radius {radius}")
+        pygame.draw.circle(self.image, WHITE, (center, center), radius)
         self.rect = self.image.get_rect()
         
         if position:
