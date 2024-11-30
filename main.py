@@ -122,6 +122,8 @@ class Game:
                     self.score += collision.points
                     self.collect_sound.play()
                     self.particle_system.create_particles(collision.rect.center)
+                    # Update spaceship size based on collected item
+                    self.spaceship.adjust_size(collision.size)
     
     def draw(self):
         try:
@@ -133,15 +135,9 @@ class Game:
             self.spaceship.draw(self.screen)
             self.particle_system.draw(self.screen)
             
-            # Draw score and current sizes
+            # Draw score
             score_text = self.font.render(f'Score: {self.score}', True, WHITE)
             self.screen.blit(score_text, (10, 10))
-            
-            # Display current asteroid sizes
-            current_sizes = [int(c.size) for c in self.collectibles]
-            sizes_text = f"Current sizes: {', '.join(map(str, current_sizes))}"
-            sizes_text = self.font.render(sizes_text, True, WHITE)
-            self.screen.blit(sizes_text, (10, 50))
             
             # Draw game over message
             if self.game_over:
