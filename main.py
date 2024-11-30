@@ -48,19 +48,18 @@ class Game:
             sys.exit(1)
     
     def reset_game(self):
-        # Create game objects with random size variation
-        initial_size = 40
-        self.spaceship = Spaceship()
-        self.collectibles = pygame.sprite.Group()
-        self.particle_system = ParticleSystem()
-        print("Game objects created successfully")
-        
-        # Game state
+        # Game state initialization
         self.score = 0
         self.game_over = False
         self.won = False
         self.font = pygame.font.Font(None, 36)
         self.clock = pygame.time.Clock()
+        
+        # Create game objects after display initialization
+        self.spaceship = Spaceship()
+        self.particle_system = ParticleSystem()
+        self.collectibles = pygame.sprite.Group()  # Ensure proper initialization
+        print("Game objects created successfully")
         
         # Spawn initial collectibles
         self.spawn_collectibles(5)
