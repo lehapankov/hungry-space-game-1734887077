@@ -11,6 +11,9 @@ class Collectible(pygame.sprite.Sprite):
         # Calculate points based on size
         self.points = int(5 + (self.size - COLLECTIBLE_SIZE_MIN) * 0.3)
         
+        # Initialize font for size display
+        self.font = pygame.font.Font(None, int(self.size * 0.5))
+        
         # Create surface based on size
         size_int = int(self.size)
         self.image = pygame.Surface((size_int, size_int), pygame.SRCALPHA)
@@ -42,3 +45,12 @@ class Collectible(pygame.sprite.Sprite):
         if (self.rect.right < 0 or self.rect.left > SCREEN_WIDTH or 
             self.rect.bottom < 0 or self.rect.top > SCREEN_HEIGHT):
             self.kill()
+            
+    def draw(self, screen):
+        # Draw the collectible
+        screen.blit(self.image, self.rect)
+        
+        # Render size text
+        size_text = self.font.render(str(int(self.size)), True, BLACK)
+        text_rect = size_text.get_rect(center=self.rect.center)
+        screen.blit(size_text, text_rect)

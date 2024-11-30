@@ -126,7 +126,8 @@ class Game:
             self.screen.fill(BACKGROUND_COLOR)
             
             # Draw game objects
-            self.collectibles.draw(self.screen)
+            for collectible in self.collectibles:
+                collectible.draw(self.screen)
             self.spaceship.draw(self.screen)
             self.particle_system.draw(self.screen)
             
