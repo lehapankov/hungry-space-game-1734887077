@@ -188,9 +188,13 @@ class Game:
             self.clock.tick(FPS)
         
         if self.won:
-            print("\n=== GAME RESULT ===")
+            # Clear few lines for visibility
+            print("\n\n\n")
+            print("=" * 50)
+            print("GAME RESULT:")
             print('{"result": "success"}')
-            print("=================")
+            print("=" * 50)
+            print("\n")
             pygame.quit()
             sys.exit(0)
         else:
