@@ -187,8 +187,13 @@ class Game:
             self.draw()
             self.clock.tick(FPS)
         
-        pygame.quit()
-        sys.exit()
+        if self.won:
+            print('{"result": "success"}')
+            pygame.quit()
+            sys.exit(0)
+        else:
+            pygame.quit()
+            sys.exit(1)
 
 if __name__ == '__main__':
     game = Game()
