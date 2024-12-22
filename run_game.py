@@ -4,15 +4,20 @@ import sys
 
 def run_game():
     try:
-        print("Starting game as subprocess...")
+        print("Starting game as subprocess...", flush=True)
         # Run the game as a subprocess
+        print("\nWaiting for game to complete (play until you reach size 100)...", flush=True)
         result = subprocess.run(['python', 'main.py'], 
                               capture_output=True, 
                               text=True)
         
-        print(f"Game process completed with return code: {result.returncode}")
-        print(f"Game stdout: {result.stdout}")
-        print(f"Game stderr: {result.stderr}")
+        print("\n=== Game Process Output ===", flush=True)
+        print(f"Return code: {result.returncode}", flush=True)
+        print("\nStandard output:", flush=True)
+        print(result.stdout, flush=True)
+        print("\nStandard error:", flush=True)
+        print(result.stderr, flush=True)
+        print("========================", flush=True)
         
         # Check if the game exited successfully (won)
         if result.returncode == 0:
