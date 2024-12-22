@@ -8,36 +8,36 @@ def run_game():
         # Run the game as a subprocess
         print("\nWaiting for game to complete (play until you reach size 100)...", flush=True)
         result = subprocess.run(['python', 'main.py'], 
-                              capture_output=True, 
-                              text=True)
+                               capture_output=True, 
+                               text=True)
         
         print("\n=== Game Process Output ===", flush=True)
         print(f"Return code: {result.returncode}", flush=True)
-        print("\nStandard output:", flush=True)
-        print(result.stdout, flush=True)
-        print("\nStandard error:", flush=True)
-        print(result.stderr, flush=True)
-        print("========================", flush=True)
         
         # Check if the game exited successfully (won)
         if result.returncode == 0:
             try:
-                # Parse the JSON output
-                stdout_lines = result.stdout.strip().split('\n')
-                # Get the last line which should be our JSON
-                json_line = stdout_lines[-1].strip()
-                game_result = json.loads(json_line)
-                print("\n=== SUBPROCESS OUTPUT ===")
-                print("Game completed successfully!")
-                print(f"Final Result: {game_result}")
-                print("=======================")
-                return True
+                # Parse the JSON output - search for the line containing JSON
+                json_line = None
+                for line in result.stdout.strip().split('\n'):
+                    if '{"result":' in line:
+                        json_line = line.strip()
+                        break
+                
+                if json_line:
+                    game_result = json.loads(json_line)
+                    print("\n=== SUBPROCESS OUTPUT ===")
+                    print("Game completed successfully!")
+                    print(f"Final Result: {game_result}")
+                    print("=======================")
+                    return True
+                else:
+                    print("No JSON result found in output")
+                    return False
             except json.JSONDecodeError as e:
                 print(f"Error parsing game output: {e}")
-                print(f"Raw output was: {json_line}")
-                return False
-            except IndexError as e:
-                print(f"No output found: {e}")
+                if json_line:
+                    print(f"Raw output was: {json_line}")
                 return False
         else:
             print("Game ended without winning")
