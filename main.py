@@ -143,8 +143,10 @@ class Game:
                     self.spaceship.adjust_size(collision.size)
                     # Check for win condition
                     if self.spaceship.size >= 100:
+                        print(f"\nReached win condition! Size: {self.spaceship.size}")
                         self.won = True
                         self.game_over = True
+                        print("Set won and game_over flags to True")
     
     def draw(self):
         try:
@@ -187,6 +189,7 @@ class Game:
             self.draw()
             self.clock.tick(FPS)
         
+        print(f"\nGame ended. Won: {self.won}")
         if self.won:
             # Clear few lines for visibility
             print("\n\n\n")
