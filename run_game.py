@@ -22,8 +22,10 @@ def run_game():
                 # Get the last line which should be our JSON
                 json_line = stdout_lines[-1].strip()
                 game_result = json.loads(json_line)
-                print("\nGame completed successfully!")
-                print("Result:", game_result)
+                print("\n=== SUBPROCESS OUTPUT ===")
+                print("Game completed successfully!")
+                print(f"Final Result: {game_result}")
+                print("=======================")
                 return True
             except json.JSONDecodeError as e:
                 print(f"Error parsing game output: {e}")
